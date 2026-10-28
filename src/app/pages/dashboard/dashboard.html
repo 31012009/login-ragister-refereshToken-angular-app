@@ -1,0 +1,93 @@
+<main class="dashboard-page">
+  <header class="topbar">
+    <a class="brand" routerLink="/dashboard" aria-label="Northstar dashboard">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span>northstar</span>
+    </a>
+    <div class="topbar-actions">
+      <span class="online-status"><span></span> Workspace active</span>
+      <button class="avatar-button" type="button" [attr.aria-label]="'Signed in as ' + displayName()">
+        {{ (displayName().charAt(0) || 'U').toUpperCase() }}
+      </button>
+    </div>
+  </header>
+
+  <section class="dashboard-content">
+    <div class="welcome-row">
+      <div>
+        <div class="section-label"><span class="sparkle" aria-hidden="true">✦</span> YOUR WORKSPACE</div>
+        <h1>Good to see you, {{ displayName() }}.</h1>
+        <p>Here’s your secure space to pick up where you left off.</p>
+      </div>
+      <button class="sign-out-button" type="button" [disabled]="isSigningOut()" (click)="signOutFromCurrentSession()">
+        <span aria-hidden="true">↗</span> Sign out
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="message error-message" role="alert">{{ errorMessage() }}</div>
+    }
+    @if (successMessage()) {
+      <div class="message success-message" role="status">{{ successMessage() }}</div>
+    }
+
+    <div class="dashboard-grid">
+      <section class="welcome-card">
+        <div class="welcome-card-copy">
+          <span class="card-eyebrow">YOUR ACCOUNT</span>
+          <h2>Everything is<br />in good hands.</h2>
+          <p>Your sign-in is protected with short-lived access tokens and a secure, server-managed session.</p>
+          <button type="button" class="refresh-button" [disabled]="isRefreshingProfile()" (click)="refreshProfile()">
+            @if (isRefreshingProfile()) {
+              <span class="spinner" aria-hidden="true"></span> Checking…
+            } @else {
+              <span aria-hidden="true">↻</span> Refresh profile
+            }
+          </button>
+        </div>
+        <div class="illustration" aria-hidden="true">
+          <div class="illustration-orbit"></div>
+          <div class="illustration-card"><span class="illustration-check">✓</span><span class="line line-wide"></span><span class="line"></span></div>
+          <div class="illustration-spark">✦</div>
+          <div class="illustration-dot"></div>
+        </div>
+      </section>
+
+      <section class="profile-card">
+        <div class="card-header">
+          <div>
+            <span class="card-eyebrow">ACCOUNT DETAILS</span>
+            <h2>Your profile</h2>
+          </div>
+          <span class="profile-icon" aria-hidden="true">◎</span>
+        </div>
+        <div class="profile-identity">
+          <span class="profile-avatar">{{ (displayName().charAt(0) || 'U').toUpperCase() }}</span>
+          <div>
+            <strong>{{ displayName() }}</strong>
+            <span>{{ currentUser()?.email || 'Email not provided by the API' }}</span>
+          </div>
+        </div>
+        <div class="profile-meta">
+          <div><span>Account ID</span><strong>{{ currentUser()?.id ?? 'Not provided' }}</strong></div>
+          <div><span>Session security</span><strong class="secure-value"><i></i> Protected</strong></div>
+        </div>
+      </section>
+
+      <section class="security-card">
+        <div class="security-icon" aria-hidden="true"><span>✓</span></div>
+        <div class="security-copy">
+          <span class="card-eyebrow">SESSION SECURITY</span>
+          <h2>You're all set</h2>
+          <p>Access tokens stay in memory. Refresh tokens are stored in an HttpOnly cookie and are never exposed to page scripts.</p>
+        </div>
+        <button type="button" class="text-button" [disabled]="isSigningOut()" (click)="signOutFromAllSessions()">Sign out all devices <span aria-hidden="true">→</span></button>
+      </section>
+    </div>
+
+    <footer class="dashboard-footer">
+      <span>Northstar Workspace <span class="footer-divider">·</span> Your work, in focus.</span>
+      <span class="footer-secure"><span></span> Encrypted connection</span>
+    </footer>
+  </section>
+</main>
